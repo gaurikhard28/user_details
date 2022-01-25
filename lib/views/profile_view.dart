@@ -7,9 +7,10 @@ import 'signup_view.dart';
 import 'package:flutter/material.dart';
 
 class profile_view extends StatefulWidget {
-  var name;
+  String? name;
 
-   profile_view(this.name, {Key? key}) : super(key: key);
+   profile_view( {Key? key , this.name}):
+         assert(name!=null),  super(key: key);
 
   @override
   _profileState createState() => _profileState();
@@ -41,7 +42,7 @@ class _profileState extends State<profile_view> {
           FlatButton(
             onPressed: () {
 
-              Signup_bloc.dispatch(LoggedOut());
+              Signup_bloc.add(LoggedOut());
             },
             child: const Text("Log Out", style: TextStyle(color: Colors.white),),
           ),],

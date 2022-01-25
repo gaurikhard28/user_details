@@ -2,12 +2,16 @@ import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class signupEvent extends Equatable {
-  signupEvent([List props = const []]) : super(props);
+  signupEvent([List props = const []]) : super();
 }
 
 class AppStarted extends signupEvent {
   @override
   String toString() => 'AppStarted';
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
 }
 
 class LoggedIn extends signupEvent {
@@ -17,11 +21,19 @@ class LoggedIn extends signupEvent {
 
   @override
   String toString() => 'LoggedIn { token: $token }';
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
 }
 
 class LoggedOut extends signupEvent {
   @override
   String toString() => 'LoggedOut';
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
 }
 
 

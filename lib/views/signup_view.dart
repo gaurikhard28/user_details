@@ -6,12 +6,13 @@ import 'package:user_details/bloc/signin_events.dart';
 import 'package:user_details/bloc/signin_state.dart';
 import 'package:user_details/bloc/signup_bloc.dart';
 import 'package:user_details/resources/signup_repository.dart';
+import 'login_view.dart';
 import 'profile_view.dart';
 
 class signup_view extends StatefulWidget {
-  final signup_repository Signup_repository;
-  const signup_view({Key? key,  required this.Signup_repository}) :
-      assert(Signup_repository!=null),  super(key: key);
+  final signup_repository? Signup_repository;
+  const signup_view({Key? key,   this.Signup_repository}) :
+    super(key: key);
 
 
   @override
@@ -19,14 +20,6 @@ class signup_view extends StatefulWidget {
 }
 
 class _signupState extends State<signup_view> {
-  late signup_bloc Signup_bloc;
-  late signinBloc SigninBloc;
-  signup_repository get _Signup_repository=>widget.Signup_repository;
-
-  bool isLoading= false;
-  final _contactController = TextEditingController();
-  final _passwordController = TextEditingController();
-   var _nameController = TextEditingController();
 
 @override
 void initState(){
@@ -34,17 +27,25 @@ void initState(){
   BlocProvider.of<signup_bloc>(context);
    Signup_bloc= signup_bloc(
       Signup_repository: _Signup_repository,
-
-  );
+   );
   super.initState();
 
 }
+late signup_bloc Signup_bloc;
+late signinBloc SigninBloc;
+signup_repository get _Signup_repository=>widget.Signup_repository!;
+
+bool isLoading= false;
+final _contactController = TextEditingController();
+final _passwordController = TextEditingController();
+var _nameController = TextEditingController();
+
 
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<signinEvent,signinState>
-      (bloc: SigninBloc, builder: (
+    return BlocBuilder<signinBloc,signinState>
+      ( builder: (
         BuildContext context,
         signinState state,
     )
@@ -90,13 +91,21 @@ void initState(){
                 const SizedBox(
                   height: 20,
                 ),
-                const Center(
-                  child: Text(" Log In ? ",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),),
+                TextButton(
+
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (BuildContext context) =>login_page()),
+                    );
+                  },
+                  child: const Center(
+                    child: Text(" Log In ? ",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),),
+                  ),
                 ),
                 const SizedBox(
                   height: 40,
@@ -114,7 +123,7 @@ void initState(){
                       });
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (BuildContext context) =>
-                            profile_view(_nameController.text)),
+                            profile_view(name: _nameController.text)),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -142,8 +151,8 @@ void initState(){
             ),
           ),
         );
-      };
-     
+      }
+      return loading();
   }
   );
 
@@ -152,6 +161,11 @@ void initState(){
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       callback();
     });
+  }
+  Widget loading(){
+  return const Center(
+    child: CircularProgressIndicator(),
+  );
   }
 
   Widget ContactField(){
@@ -186,11 +200,11 @@ void initState(){
     );
   }
   void dispose() {
-    SigninBloc.dispose();
+    SigninBloc.close();
     super.dispose();
   }
   _onLoginButtonPressed() {
-    SigninBloc.dispatch(signinButtonPressed(
+    SigninBloc.add(signinButtonPressed(
       name: _nameController.text,
       password: _passwordController.text,
       phone: _contactController.text,

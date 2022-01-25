@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:user_details/bloc/signin_events.dart';
 import 'package:user_details/bloc/signin_state.dart';
@@ -15,8 +13,13 @@ class signinBloc extends Bloc<signinEvent, signinState> {
   signinBloc({
     required this.Signup_repository,
     required this.Signup_bloc,
-  })  : assert(Signup_repository != null),
-        assert(Signup_bloc != null);
+  })  :  super(signinState());
+
+  @override
+  void onTransition(Transition<signinEvent, signinState> transition) {
+    super.onTransition(transition);
+    print(transition);
+  }
 
   @override
   signinState get initialState => signinInitial();
@@ -36,11 +39,12 @@ class signinBloc extends Bloc<signinEvent, signinState> {
           phone: event.phone,
         );
 
-        Signup_bloc.dispatch(LoggedIn(token: token));
+        Signup_bloc.add(LoggedIn(token: token));
         yield signinInitial();
       } catch (error) {
         yield signinFailure(error: error.toString());
       }
     }
   }
+
 }

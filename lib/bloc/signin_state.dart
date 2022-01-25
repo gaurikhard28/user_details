@@ -1,7 +1,8 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class signinState extends Equatable {
+
+class signinState extends Equatable {
   signinState();
 
   @override
